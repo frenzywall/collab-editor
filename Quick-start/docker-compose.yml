@@ -1,5 +1,5 @@
 version: '3.8'
-
+# Do docker-compose up -d for line start ;)
 services:
   client:
     image: ghcr.io/frenzywall/collab-editor/editor:client  
