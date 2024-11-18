@@ -35,18 +35,37 @@ collaborative-editor/ .1
 * [Node.js](https://nodejs.org/) (for development, if you want to build locally)
 * [GitHub Container Registry](https://ghcr.io/) (for pulling Docker images)
 
+
+### 1.Quick start!(Suggested!)[Method-1]
+
 ##  Setup use for .1 files, you need all .1 files.
 
 - This context will build and run docker images based on current Dockerfile contexts in both client and server.
 
-### 1️⃣ Clone the Repository
+
+- If you want to get started with the project without the hassle of setting up everything, this is for you!
+- Simply download the compose file in collaborative-editor/Quick-Start/docker-compose.yml
+- You don't need the rest of code, just the docker-compose.yml is enough.
+
+```bash
+cd Quick-start
+```
+- Run this where you have downloaded the .yml if you have not downloaded the entire repo.
+
+```bash
+docker-compose up -d
+
+````
+- And you are done!
+
+### 2. Clone the Repository[Method-2]
 
 ```bash
 git clone https://github.com/frenzywall/collaborative-editor.git
 cd collaborative-editor
 ```
 
-### 1️⃣ Build and Start Services with Docker Compose
+###  Build and Start Services with Docker Compose
 
 Run the following command to build and start both the client and server containers:
 
@@ -56,7 +75,7 @@ docker-compose up -d
 
 > **Note**: This will build Docker images for both services and start them in detached mode (-d)
 
-## 2.Local Development Setup (Optional), Setup use for .2 files, you need all .2 files.
+## 3.Local Development Setup (Optional), Setup use for .2 files, you need all .2 files.[Method-3]
 
 - This is intended for pure local developments, this setup would allow you to access localhost and devices connected across your network.
 
@@ -99,22 +118,6 @@ If your IP address is 192.168.1.100:
 - Frontend: `http://192.168.1.100:3000`
 - Backend: `http://192.168.1.100:3001`
 
-### 3.Quick start!
-
-- If you want to get started with the project without the hassle of setting up everything, this is for you!
-- Simply download the compose file in collaborative-editor/Quick-Start/docker-compose.yml
-- You don't need the rest of code, just the docker-compose.yml is enough.
-
-```bash
-cd Quick-start
-```
-- Run this where you have downloaded the .yml if you have not downloaded the entire repo.
-
-```bash
-docker-compose up -d
-
-````
-- And you are done!
 
 ##  Docker Images
 
