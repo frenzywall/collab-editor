@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   client:
-    image: ghcr.io/${{ github.repository }}/editor:client  
+    image: ghcr.io/frenzywall/collab-editor/editor:client  
     ports:
       - "3000:3000"
     environment:
@@ -14,7 +14,7 @@ services:
       - app-network
 
   server:
-    image: ghcr.io/${{ github.repository }}/editor:server  
+    image: ghcr.io/frenzywall/collab-editor/editor:server  
     ports:
       - "3001:3001"
     environment:

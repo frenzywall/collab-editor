@@ -70,7 +70,6 @@ const Editor = ({ roomId, username }) => {
       console.error('Socket error:', error);
     };
 
-    // Register event listeners
     newSocket.on('connect', handleConnect);
     newSocket.on('initial-state', handleInitialState);
     newSocket.on('document-change', handleDocumentChange);
@@ -80,7 +79,6 @@ const Editor = ({ roomId, username }) => {
     newSocket.on('typing', handleTyping);
     newSocket.on('error', handleError);
 
-    // Cleanup function
     return () => {
       Object.values(unlockTimeoutRef.current).forEach(clearTimeout);
 

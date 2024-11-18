@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - REACT_APP_SERVER_URL=http://localhost:3001  # This will be overridden by client-side logic
+      - REACT_APP_SERVER_URL=http://localhost:3001  
     depends_on:
       - server
     networks:

@@ -11,7 +11,7 @@ function JoinRoom({ onJoin }) {
       setError('Both Room ID and Username are required');
     } else {
       setError('');  
-      onJoin(roomId, username.trim());  // Ensure no leading/trailing spaces are included
+      onJoin(roomId, username.trim());  
     }
   };
 

@@ -6,7 +6,6 @@ function UserList({ roomId, username }) {
   const [typingUser, setTypingUser] = useState(null);
 
   useEffect(() => {
-    // Get the socket URL based on environment
     const socketUrl = process.env.NODE_ENV === 'development'
       ? (process.env.REACT_APP_SERVER_URL || 'http://localhost:3001')
       : `${window.location.protocol}//${window.location.hostname}:3001`;

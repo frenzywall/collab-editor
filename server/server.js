@@ -6,26 +6,22 @@ const os = require('os');
 const app = express();
 const httpServer = createServer(app);
 
-// Get allowed origins based on environment
 const getAllowedOrigins = () => {
   if (process.env.NODE_ENV === 'production') {
-    // In production, allow the client service and localhost
     return [
-      'http://client:3000',      // Docker service name
-      'http://localhost:3000',   // Local development
-      /^http:\/\/\d+\.\d+\.\d+\.\d+:3000$/  // Any IP address on port 3000
+      'http://client:3000',      
+      'http://localhost:3000',   
+      /^http:\/\/\d+\.\d+\.\d+\.\d+:3000$/  
     ];
   }
-  return ['http://localhost:3000']; // Development
+  return ['http://localhost:3000'];
 };
 
-// Configure Socket.IO with CORS
 const io = new Server(httpServer, {
   cors: {
     origin: (origin, callback) => {
       const allowedOrigins = getAllowedOrigins();
-      
-      // Allow if origin is null (same origin) or matches allowed patterns
+
       const isAllowed = !origin || allowedOrigins.some(allowed => {
         if (allowed instanceof RegExp) {
           return allowed.test(origin);
@@ -44,7 +40,6 @@ const io = new Server(httpServer, {
   }
 });
 
-// Socket connection handling
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
@@ -52,7 +47,7 @@ io.on('connection', (socket) => {
     const { roomId, username } = data;
     socket.join(roomId);
     console.log(`User ${username} joined room ${roomId}`);
-    // Add other room joining logic as necessary
+
   });
 
   socket.on('disconnect', () => {
@@ -81,11 +76,9 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
 
-// Original socket event handlers
 io.on('connection', (socket) => {
   console.log(`A New User Has Joined..`);
 
-  // User joins room
   socket.on('join-room', ({ roomId, username }) => {
     if (!username || !username.trim()) {
       socket.emit('error', 'Invalid username.');

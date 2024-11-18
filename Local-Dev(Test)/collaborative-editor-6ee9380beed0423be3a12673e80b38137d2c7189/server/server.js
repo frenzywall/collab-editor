@@ -46,15 +46,15 @@ app.get('/health', (req, res) => {
 io.on('connection', (socket) => {
   console.log(`A New User Has Joined..`);
 
-  // User joins room
+ 
   socket.on('join-room', ({ roomId, username }) => {
-    // Trim and check if username is valid
+    
     if (!username || !username.trim()) {
       socket.emit('error', 'Invalid username.');
       return;
     }
 
-    username = username.trim();  // Ensure no leading/trailing spaces
+    username = username.trim();  
     console.log(`User |${username}| has joined the room: RoomID {${roomId}}.`);
 
     socket.join(roomId);
@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('users-update', Array.from(room.users));
   });
 
-  // Document change event handler
+
   socket.on('document-change', ({ roomId, content, lineNumber }) => {
     const room = rooms.get(roomId);
     if (!room) return;
@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('document-change', content);
   });
 
-  // Locking a line
+
   socket.on('lock-line', ({ roomId, lineNumber, username }) => {
     const room = rooms.get(roomId);
     if (!room) return;
@@ -129,7 +129,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Unlocking a line
   socket.on('unlock-line', ({ roomId, lineNumber }) => {
     const room = rooms.get(roomId);
     if (!room) return;
@@ -146,7 +145,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Typing event handler
+
   socket.on('typing', ({ roomId, username }) => {
     const room = rooms.get(roomId);
     if (!room) return;
@@ -162,15 +161,14 @@ io.on('connection', (socket) => {
     }, 2000);
   });
 
-  // Handle disconnect event
+
   socket.on('disconnect', () => {
     console.log(`User disconnected.`);
 
     rooms.forEach((room, roomId) => {
       if (room.users.has(socket.username)) {
-        room.users.delete(socket.username);  // Remove username from the room
+        room.users.delete(socket.username);  
 
-        // Handle line unlocking when the user disconnects
         Object.entries(room.lockedLines).forEach(([lineNumber, username]) => {
           if (username === socket.username) {
             delete room.lockedLines[lineNumber];
@@ -178,12 +176,12 @@ io.on('connection', (socket) => {
           }
         });
 
-        room.typingUsers.delete(socket.username);  // Remove user from typingUsers
+        room.typingUsers.delete(socket.username);  
 
-        // Emit updated users list and typing status to the room
-        const updatedUsers = Array.from(room.users).filter(user => user);  // Filter out empty/undefined users
+  
+        const updatedUsers = Array.from(room.users).filter(user => user);
         io.to(roomId).emit('users-update', updatedUsers);
-        io.to(roomId).emit('typing', Array.from(room.typingUsers).filter(user => user));  // Filter out empty typing users
+        io.to(roomId).emit('typing', Array.from(room.typingUsers).filter(user => user)); 
       }
     });
   });
