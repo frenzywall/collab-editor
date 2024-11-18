@@ -1,27 +1,41 @@
 version: '3.8'
-# Do docker-compose up -d for line start ;)
+
 services:
   client:
-    image: ghcr.io/frenzywall/collab-editor/editor:client  
+    image: ghcr.io/frenzywall/collab-editor/editor:client
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - REACT_APP_SERVER_URL=http://localhost:3001  
+      - REACT_APP_SERVER_URL=http://localhost:3001
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
       - server
     networks:
       - app-network
 
   server:
-    image: ghcr.io/frenzywall/collab-editor/editor:server  
+    image: ghcr.io/frenzywall/collab-editor/editor:server
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - app-network
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  
+    environment:
+      - WATCHTOWER_CLEANUP=true                
+      - WATCHTOWER_POLL_INTERVAL=300 
+      - WATCHTOWER_DEBUG=true        
 
 networks:
   app-network:
