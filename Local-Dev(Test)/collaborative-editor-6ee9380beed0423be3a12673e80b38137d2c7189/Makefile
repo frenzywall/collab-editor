@@ -12,16 +12,7 @@ install:
 	@echo "Step 3: Building an optimized production build..."
 	@cd client && npm run build
 	@echo "Production build created successfully!"
-	@echo "------------------------------------------------------------"
-	@echo "Step 4: Serving the production build..."
-	@cd client && npm install -g serve && serve -s build
-	@echo "Build is now being served successfully!"
-	@echo "------------------------------------------------------------"
-	@echo "Step 5: Starting the server..."
-	@cd server && node server.js
-	@echo "Server started successfully!"
-	@echo "------------------------------------------------------------"
-
+	
 run:
 	@echo "------------------------------------------------------------"
 	@echo "Running the server and serving the production build..."
