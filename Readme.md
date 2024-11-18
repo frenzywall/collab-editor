@@ -82,6 +82,8 @@ make help
 
 - Use the get_ip.sh script or the Get-IPV4 website page in this Git repo to get your current IPv4 address.
 
+## (https://frenzywall.github.io/collab-editor/)
+
 | Service  | URL                    | Description                    | On-Network                    |
 |----------|------------------------|--------------------------------|-------------------------------|
 | Frontend | http://localhost:3000  | Collaborative Editor Interface | http://<your-ipv4>:3000      |
