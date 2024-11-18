@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Address Checker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .animate-pulse-slow {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="max-w-md w-full bg-gray-800 rounded-lg shadow-xl p-6 space-y-6">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold mb-2">IP Address Checker</h1>
+            <p class="text-gray-400">Get your current IPv4 address</p>
+        </div>
+
+        <div class="bg-gray-700 rounded-lg p-4 text-center">
+            <p class="text-sm text-gray-400 mb-2">Your IPv4 Address:</p>
+            <div id="ipAddress" class="text-2xl font-mono font-bold animate-pulse-slow">
+                Loading...
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="bg-gray-700 rounded-lg p-4">
+                <p class="text-sm text-gray-400 mb-2">Frontend URL:</p>
+                <div id="frontendUrl" class="text-sm font-mono break-all">
+                    Loading...
+                </div>
+            </div>
+
+            <div class="bg-gray-700 rounded-lg p-4">
+                <p class="text-sm text-gray-400 mb-2">Backend URL:</p>
+                <div id="backendUrl" class="text-sm font-mono break-all">
+                    Loading...
+                </div>
+            </div>
+        </div>
+
+        <button onclick="copyToClipboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+            Copy URLs
+        </button>
+
+        <div id="copyNotification" class="hidden fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
+            Copied to clipboard!
+        </div>
+    </div>
+
+    <script>
+        async function getIPAddress() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error fetching IP:', error);
+                return 'Error fetching IP';
+            }
+        }
+
+        function updateUrls(ip) {
+            document.getElementById('ipAddress').textContent = ip;
+            document.getElementById('frontendUrl').textContent = `http://${ip}:3000`;
+            document.getElementById('backendUrl').textContent = `http://${ip}:3001`;
+        }
+
+        function copyToClipboard() {
+            const frontend = document.getElementById('frontendUrl').textContent;
+            const backend = document.getElementById('backendUrl').textContent;
+            const textToCopy = `Frontend: ${frontend}\nBackend: ${backend}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const notification = document.getElementById('copyNotification');
+                notification.classList.remove('hidden');
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        getIPAddress().then(updateUrls);
+    </script>
+</body>
+</html>
