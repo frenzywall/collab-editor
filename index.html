@@ -19,49 +19,34 @@
     <div class="max-w-md w-full bg-gray-800 rounded-lg shadow-xl p-6 space-y-6">
         <div class="text-center">
             <h1 class="text-3xl font-bold mb-2">IP Address Checker</h1>
-            <p class="text-gray-400">Network Address Information</p>
+            <p class="text-gray-400">Get your current IPv4 address</p>
         </div>
 
-        <div class="bg-gray-700 rounded-lg p-4">
-            <div class="mb-4">
-                <p class="text-sm text-gray-400 mb-2">Your Public IPv4 Address:</p>
-                <div id="publicIp" class="text-xl font-mono font-bold animate-pulse-slow">
-                    Loading...
-                </div>
-                <p class="text-xs text-gray-500 mt-1">(Visible to external networks)</p>
-            </div>
-
-            <div>
-                <p class="text-sm text-gray-400 mb-2">Your Local IPv4 Address:</p>
-                <div id="localIp" class="text-xl font-mono font-bold">
-                    Loading...
-                </div>
-                <p class="text-xs text-gray-500 mt-1">(For local network access)</p>
+        <div class="bg-gray-700 rounded-lg p-4 text-center">
+            <p class="text-sm text-gray-400 mb-2">Your IPv4 Address:</p>
+            <div id="ipAddress" class="text-2xl font-mono font-bold animate-pulse-slow">
+                Loading...
             </div>
         </div>
 
         <div class="space-y-4">
             <div class="bg-gray-700 rounded-lg p-4">
-                <p class="text-sm text-gray-400 mb-2">Local Network URLs:</p>
+                <p class="text-sm text-gray-400 mb-2">Frontend URL:</p>
                 <div id="frontendUrl" class="text-sm font-mono break-all">
-                    Loading...
-                </div>
-                <div id="backendUrl" class="text-sm font-mono break-all mt-2">
                     Loading...
                 </div>
             </div>
 
             <div class="bg-gray-700 rounded-lg p-4">
-                <p class="text-sm text-gray-400">Note:</p>
-                <ul class="text-xs text-gray-500 list-disc list-inside mt-1">
-                    <li>Use local URLs for development and local network access</li>
-                    <li>Local URLs only work within your network</li>
-                </ul>
+                <p class="text-sm text-gray-400 mb-2">Backend URL:</p>
+                <div id="backendUrl" class="text-sm font-mono break-all">
+                    Loading...
+                </div>
             </div>
         </div>
 
         <button onclick="copyToClipboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">
-            Copy Local URLs
+            Copy URLs
         </button>
 
         <div id="copyNotification" class="hidden fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
@@ -70,55 +55,21 @@
     </div>
 
     <script>
-        async function getPublicIP() {
+        async function getIPAddress() {
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
                 const data = await response.json();
-                document.getElementById('publicIp').textContent = data.ip;
+                return data.ip;
             } catch (error) {
-                document.getElementById('publicIp').textContent = 'Error fetching IP';
+                console.error('Error fetching IP:', error);
+                return 'Error fetching IP';
             }
         }
 
-        async function getLocalIP() {
-            try {
-                // Get list of network interfaces
-                const ips = await new Promise((resolve, reject) => {
-                    // Try using WebRTC to get local IP
-                    const rtc = new RTCPeerConnection({ iceServers: [] });
-                    const ips = new Set();
-                    
-                    rtc.createDataChannel('');
-                    rtc.createOffer()
-                        .then(offer => rtc.setLocalDescription(offer))
-                        .catch(reject);
-                    
-                    rtc.onicecandidate = event => {
-                        if (event.candidate && event.candidate.candidate) {
-                            const matches = event.candidate.candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3})/);
-                            if (matches) {
-                                ips.add(matches[1]);
-                            }
-                        } else {
-                            resolve(Array.from(ips));
-                            rtc.close();
-                        }
-                    };
-                });
-
-                const localIp = ips.find(ip => ip.match(/^(192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|10\.)/));
-                if (localIp) {
-                    document.getElementById('localIp').textContent = localIp;
-                    document.getElementById('frontendUrl').textContent = `http://${localIp}:3000`;
-                    document.getElementById('backendUrl').textContent = `http://${localIp}:3001`;
-                } else {
-                    throw new Error('No local IP found');
-                }
-            } catch (error) {
-                document.getElementById('localIp').textContent = 'Use terminal command: ./get_ip.sh';
-                document.getElementById('frontendUrl').textContent = 'Run ./get_ip.sh for local URLs';
-                document.getElementById('backendUrl').textContent = '';
-            }
+        function updateUrls(ip) {
+            document.getElementById('ipAddress').textContent = ip;
+            document.getElementById('frontendUrl').textContent = `http://${ip}:3000`;
+            document.getElementById('backendUrl').textContent = `http://${ip}:3001`;
         }
 
         function copyToClipboard() {
@@ -135,9 +86,8 @@
             });
         }
 
-        // Initializee
-        getPublicIP();
-        getLocalIP();
+        // Initialize
+        getIPAddress().then(updateUrls);
     </script>
 </body>
 </html>

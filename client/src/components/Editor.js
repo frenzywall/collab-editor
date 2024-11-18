@@ -112,7 +112,7 @@ const Editor = ({ roomId, username }) => {
 
     if (lockedLines[lineNumber] && lockedLines[lineNumber] !== username) {
       e.preventDefault();
-      setError(`${lockedLines[lineNumber]} is editing line ${lineNumber + 1}`);
+      setError(`${lockedLines[lineNumber]} is editing line ${lineNumber + 1}, wait for them to finish typing..`);
       return;
     }
 
@@ -191,7 +191,7 @@ const Editor = ({ roomId, username }) => {
         {Object.entries(lockedLines).length > 0 && (
           <div className="text-sm text-gray-600">
             {Object.entries(lockedLines).map(([line, user]) => (
-              <div key={line}>Line {parseInt(line) + 1} locked by {user}</div>
+              <div key={line}>{user} is typing on line {parseInt(line) + 1} wait for them to finish typing...</div>
             ))}
           </div>
         )}
