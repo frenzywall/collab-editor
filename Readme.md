@@ -102,7 +102,7 @@ If your IP address is 192.168.1.100:
 ### 3.Quick start!
 
 - If you want to get started with the project without the hassle of setting up everything, this is for you!
-- Simply download the compose file in collaborative-editor/Quick-Start/docker-compose.yl
+- Simply download the compose file in collaborative-editor/Quick-Start/docker-compose.yml
 - You don't need the rest of code, just the docker-compose.yml is enough.
 
 ```bash
