@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  client:
+    image: ghcr.io/${{ github.repository }}/editor:client  
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_SERVER_URL=http://localhost:3001  
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+  server:
+    image: ghcr.io/${{ github.repository }}/editor:server  
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
