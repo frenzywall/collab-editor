@@ -8,6 +8,7 @@ services:
     environment:
       - NODE_ENV=production
       - REACT_APP_SERVER_URL=http://localhost:3001
+      - TZ=Asia/Kolkata
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     depends_on:
@@ -22,6 +23,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
+      - TZ=Asia/Kolkata
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
@@ -34,8 +36,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock  
     environment:
       - WATCHTOWER_CLEANUP=true                
-      - WATCHTOWER_POLL_INTERVAL=300 
-      - WATCHTOWER_DEBUG=true        
+      - WATCHTOWER_POLL_INTERVAL=30
+      - WATCHTOWER_DEBUG=true  
+      - TZ=Asia/Kolkata      
 
 networks:
   app-network:
