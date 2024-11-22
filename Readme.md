@@ -2,8 +2,8 @@
 
 A collaborative real-time *chat* room built with **React**, **Node.js**, and **WebSocket**. This project consists of two main services:
 
-- A **client** that provides the user interface
-- A **server** that handles the backend and communication
+- A **client** that provides the user interface.
+- A **server** that handles the backend and communication.
 
 ## 📁 Project Structure
 ```
