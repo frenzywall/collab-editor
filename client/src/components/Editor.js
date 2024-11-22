@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import io from 'socket.io-client';
+import './Editor.css';
 const getSocketUrl = () => {
   if (process.env.NODE_ENV === 'development') {
     return process.env.REACT_APP_SERVER_URL || 'http://localhost:3001';
@@ -143,38 +144,37 @@ const Editor = ({ roomId, username }) => {
   const handleCursorPositionChange = useCallback((e) => {
     setLocalCursorPosition(e.target.selectionStart);
   }, []);
-
   return (
-    <div className="min-h-screen w-full p-5 flex flex-col">
+    <div className="editor-container">
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="error-message">
           {error}
         </div>
       )}
 
-      <div className="mb-4 bg-white rounded-lg shadow-md p-6 border border-gray-100">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Connected Users</h2>
-          <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full">
+      <div className="users-panel">
+        <div className="users-header">
+          <h2>Connected Users</h2>
+          <span className="users-count">
             {activeUsers.length} {activeUsers.length === 1 ? 'user' : 'users'} online
           </span>
         </div>
-        <ul className="space-y-2">
+        <ul className="users-list">
           {activeUsers.map((user, index) => (
-            <li key={index} className="flex items-center space-x-2">
-              <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
-              <span className="text-gray-700 font-medium">{user}</span>
+            <li key={index} className="user-item">
+              <span className="user-status"></span>
+              <span className="user-name">{user}</span>
             </li>
           ))}
         </ul>
         {activeUsers.length === 0 && (
-          <div className="text-center py-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">No active users</p>
+          <div className="no-users">
+            <p>No active users</p>
           </div>
         )}
       </div>
 
-      <div className="flex-grow relative flex flex-col min-h-[60vh]">
+      <div className="editor-wrapper">
         <textarea
           ref={textareaRef}
           value={content}
@@ -182,27 +182,28 @@ const Editor = ({ roomId, username }) => {
           onKeyUp={handleCursorPositionChange}
           onClick={handleCursorPositionChange}
           placeholder="Start typing here..."
-          className="w-full h-full p-4 text-base resize-none border rounded-lg focus:ring-3 focus:ring-blue-500"
-          style={{ minHeight: '300px' }}
+          className="editor-textarea"
         />
       </div>
 
-      <div className="mt-4 space-y-2 bg-white rounded-lg shadow p-4">
+      <div className="status-panel">
         {Object.entries(lockedLines).length > 0 && (
-          <div className="text-sm text-gray-600">
+          <div className="locked-lines">
             {Object.entries(lockedLines).map(([line, user]) => (
-              <div key={line}>{user} is typing on line {parseInt(line) + 1} wait for them to finish typing...</div>
+              <div key={line} className="locked-line">
+                Line {parseInt(line) + 1} locked by {user}
+              </div>
             ))}
           </div>
         )}
 
         {typingUsers.length > 0 && (
-          <div className="text-sm text-gray-500">
+          <div className="typing-status">
             {`${typingUsers.join(', ')} ${typingUsers.length === 1 ? 'is' : 'are'} typing...`}
           </div>
         )}
 
-        <div className="text-sm text-gray-500">
+        <div className="active-users">
           {activeUsers.length > 0
             ? `Active users: ${activeUsers.join(', ')}`
             : 'No active users'}
