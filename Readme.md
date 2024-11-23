@@ -103,10 +103,10 @@ make help
 
 ## (https://frenzywall.github.io/collab-editor/)
 
-| Service  | URL                    | Description                    | On-Network                    |
-|----------|------------------------|--------------------------------|-------------------------------|
-| Frontend | http://localhost:3000  | Collaborative Editor Interface | http://<your-ipv4>:3000      |
-| Backend  | http://localhost:3001  | WebSocket Server              | http://<your-ipv4>:3001      |
+| Service  | URL                    | Description                    | On-Network                     |
+|----------|------------------------|--------------------------------|--------------------------------|
+| Frontend | http://localhost:3000  | Collaborative Editor Interface | http://<your-ipv4>:3000        |
+| Backend  | http://localhost:3001  | WebSocket Server               | http://<your-ipv4>:3001        |
 
 > **Note**: Replace `<your-ipv4>` with your machine's IPv4 address to access the services from other devices on your network.
 > To find your IPv4 address:
