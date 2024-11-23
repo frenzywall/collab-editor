@@ -182,7 +182,7 @@ const Editor = ({ roomId, username }) => {
           <div className="locked-lines">
             {Object.entries(lockedLines).map(([line, user]) => (
               <div key={line} className="locked-line">
-                Line {parseInt(line) + 1} locked by {user}
+                {user} is typing on Line {parseInt(line) + 1} wait for them to finish typing..
               </div>
             ))}
           </div>

@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
-function UserList({ roomId, username }) {
-  const [users, setUsers] = useState([]);
+const UserList = ({ roomId, username }) => {
   const [typingUser, setTypingUser] = useState(null);
 
   useEffect(() => {
@@ -16,10 +15,6 @@ function UserList({ roomId, username }) {
 
     newSocket.emit('join-room', { roomId, username });
 
-    newSocket.on('users-update', (updatedUsers) => {
-      setUsers(updatedUsers);
-    });
-
     newSocket.on('typing', (typingUser) => {
       setTypingUser(typingUser);
     });
@@ -30,16 +25,15 @@ function UserList({ roomId, username }) {
   }, [roomId, username]);
 
   return (
-    <div>
-      <h3>Users in Room</h3>
-      <ul>
-        {users.map((user) => (
-          <li key={user}>{user}</li>
-        ))}
-      </ul>
-      {typingUser && <p>{typingUser} is typing...</p>}
+    <div className="p-4 border rounded-lg shadow-sm">
+      {/* Display typing indicator */}
+      {typingUser && typingUser !== username && (
+        <p className="text-sm text-gray-600 mt-2 italic">
+          {typingUser} is typing...
+        </p>
+      )}
     </div>
   );
-}
+};
 
 export default UserList;
