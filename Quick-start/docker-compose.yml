@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   client:
     image: ghcr.io/frenzywall/collab-editor/editor:client
