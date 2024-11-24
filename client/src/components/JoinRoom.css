@@ -1,0 +1,18 @@
+.bg-image {
+    background-image: url('../assets/joinroom.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.shadow-xl {
+    box-shadow:
+        2px 15px 300px rgb(142, 155, 194),
+        inset -1px -1px rgba(255,255,255,0.5);
+}
+
+.shadow-lg {
+    box-shadow:
+        inset -1px -1px rgba(255,255,255,0.5),
+        inset -2px -2px rgba(255,255,255,0.5);
+}

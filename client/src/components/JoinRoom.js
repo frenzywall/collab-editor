@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Users, Send } from 'lucide-react';
+import { Lock, Users } from 'lucide-react';
+import './JoinRoom.css'; 
 
 const JoinRoom = ({ onJoin }) => {
   const [roomId, setRoomId] = useState('');
@@ -18,33 +19,30 @@ const JoinRoom = ({ onJoin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 flex items-center justify-center p-4">
-      <motion.div 
+    <div className="min-h-screen bg-image flex items-center justify-center p-4">
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white/80 backdrop-blur-lg shadow-2xl rounded-2xl border border-white/30 overflow-hidden"
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-white/30 overflow-hidden z-10"
       >
-        <div className="p-8 space-y-6">
-          <motion.div 
+        <div className="p-8">
+          <motion.h2
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-center"
+            className="text-3xl font-bold text-center text-gray-800 mb-6 flex items-center justify-center gap-3"
           >
-            <h2 className="text-3xl font-extrabold text-gray-800 tracking-tight">
-              Collaborative Space
-            </h2>
-            <p className="text-gray-500 mt-2">Join a collaborative editing session</p>
-          </motion.div>
+            <Users className="w-8 h-8 text-[#333333]" />
+            Join Collaborative Space
+          </motion.h2>
 
           {error && (
-            <motion.div 
+            <motion.div
               initial={{ x: -10 }}
-              animate={{ x: [0, -10, 0, 10, 0] }}
-              className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg flex items-center"
+              animate={{ x: 0 }}
+              className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg mb-4 text-center shadow-md"
             >
-              <Lock className="mr-2 text-red-400" size={20} />
               {error}
             </motion.div>
           )}
@@ -61,37 +59,40 @@ const JoinRoom = ({ onJoin }) => {
                   placeholder="Room ID"
                   value={roomId}
                   onChange={(e) => setRoomId(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring focus:ring-indigo-200/50 transition-all duration-300"
+                  className="w-full p-3 pl-10 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A4C8E1] transition-all duration-300 shadow-sm hover:shadow-lg"
                 />
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder="Your Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:border-indigo-400 focus:ring focus:ring-indigo-200/50 transition-all duration-300"
+                  className="w-full p-3 pl-10 border border-[#E0E0E0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#A4C8E1] transition-all duration-300 shadow-sm hover:shadow-lg"
                 />
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               </div>
             </motion.div>
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.25)",
+                transition: { duration: 0.3 },
+              }}
               whileTap={{ scale: 0.95 }}
               type="submit"
-              className="w-full bg-gradient-to-r from-indigo-500 to-cyan-500 text-white py-3 rounded-xl hover:from-indigo-600 hover:to-cyan-600 transition-all duration-300 flex items-center justify-center space-x-2"
+              className="w-full bg-gradient-to-r from-gray-300 to-gray-400 text-white p-3 rounded-xl transition-all duration-300 transform hover:bg-gradient-to-l hover:bg-opacity-90 shadow-lg"
             >
-              <Send size={20} />
-              <span>Join Collaborative Space</span>
+              Enter Collaborative Space
             </motion.button>
           </form>
         </div>
