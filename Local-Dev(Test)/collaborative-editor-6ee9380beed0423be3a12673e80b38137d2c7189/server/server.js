@@ -6,6 +6,41 @@ const os = require('os');
 const app = express();
 const httpServer = createServer(app);
 
+const getAllowedOrigins = () => {
+  if (process.env.NODE_ENV === 'production') {
+    return [
+      'http://client:3000',      
+      'http://localhost:3000',   
+      /^http:\/\/\d+\.\d+\.\d+\.\d+:3000$/  
+    ];
+  }
+  return ['http://localhost:3000'];
+};
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: (origin, callback) => {
+      const allowedOrigins = getAllowedOrigins();
+
+      const isAllowed = !origin || allowedOrigins.some(allowed => {
+        if (allowed instanceof RegExp) {
+          return allowed.test(origin);
+        }
+        return origin === allowed;
+      });
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
+// Function to get the IP address
 const getIPAddress = () => {
   const interfaces = os.networkInterfaces();
   for (const iface of Object.values(interfaces)) {
@@ -18,47 +53,27 @@ const getIPAddress = () => {
   return 'localhost';
 };
 
+// Define the IP address before using it
 const ipAddress = getIPAddress();
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: (origin, callback) => {
-      if (!origin || origin.startsWith(`http://${ipAddress}:3000`) || origin === 'http://localhost:3000') {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-  pingTimeout: 60000,
-  pingInterval: 25000,
-});
-
-const rooms = new Map();
+const rooms = new Map(); // Store rooms and their user counts
 const unlockTimeouts = new Map();
 
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy' });
-});
-
 io.on('connection', (socket) => {
-  console.log(`A New User Has Joined..`);
+  console.log('Client connected:', socket.id);
 
- 
   socket.on('join-room', ({ roomId, username }) => {
-    
     if (!username || !username.trim()) {
       socket.emit('error', 'Invalid username.');
       return;
     }
 
-    username = username.trim();  
+    username = username.trim();
     console.log(`User |${username}| has joined the room: RoomID {${roomId}}.`);
 
     socket.join(roomId);
 
+    // Initialize room if it doesn't exist
     if (!rooms.has(roomId)) {
       rooms.set(roomId, {
         users: new Set(),
@@ -66,25 +81,28 @@ io.on('connection', (socket) => {
         lines: [''],
         typingUsers: new Set(),
         lockedLines: {},
+        lastEditors: {}, // Track last editors for each line
       });
     }
 
     const room = rooms.get(roomId);
-    room.users.add(username);
+    room.users.add(username); // Add user to the room
     socket.username = username;
 
+    // Emit the initial state to the user who joined
     socket.emit('initial-state', {
       content: room.content,
       lines: room.lines,
       lockedLines: room.lockedLines,
       users: Array.from(room.users),
+      lastEditors: room.lastEditors, // Send last editors info
     });
 
+    // Emit updated user list to all users in the room
     io.to(roomId).emit('users-update', Array.from(room.users));
   });
 
-
-  socket.on('document-change', ({ roomId, content, lineNumber }) => {
+  socket.on('document-change', ({ roomId, content, lineNumber, lastEditor }) => {
     const room = rooms.get(roomId);
     if (!room) return;
 
@@ -98,11 +116,19 @@ io.on('connection', (socket) => {
       return;
     }
 
+    // Update content and lines as before
     room.content = content;
     room.lines = lines;
-    socket.to(roomId).emit('document-change', content);
-  });
 
+    // Update the last editor for this line
+    room.lastEditors[lineNumber] = lastEditor; // Store the last editor for this line
+
+    // Emit document change to all users in the room
+    socket.to(roomId).emit('document-change', content);
+
+    // Emit update about the last editor for this specific line
+    socket.to(roomId).emit('update-last-editor', { lineNumber, lastEditor });
+  });
 
   socket.on('lock-line', ({ roomId, lineNumber, username }) => {
     const room = rooms.get(roomId);
@@ -145,7 +171,6 @@ io.on('connection', (socket) => {
     }
   });
 
-
   socket.on('typing', ({ roomId, username }) => {
     const room = rooms.get(roomId);
     if (!room) return;
@@ -161,54 +186,52 @@ io.on('connection', (socket) => {
     }, 2000);
   });
 
-
   socket.on('disconnect', () => {
-    console.log(`User disconnected.`);
+   console.log(`User disconnected.`);
 
-    rooms.forEach((room, roomId) => {
-      if (room.users.has(socket.username)) {
-        room.users.delete(socket.username);  
+   rooms.forEach((room, roomId) => {
+     if (room.users.has(socket.username)) {
+       room.users.delete(socket.username);
 
-        Object.entries(room.lockedLines).forEach(([lineNumber, username]) => {
-          if (username === socket.username) {
-            delete room.lockedLines[lineNumber];
-            io.to(roomId).emit('line-unlocked', { lineNumber });
-          }
-        });
+       Object.entries(room.lockedLines).forEach(([lineNumber, username]) => {
+         if (username === socket.username) {
+           delete room.lockedLines[lineNumber];
+           io.to(roomId).emit('line-unlocked', { lineNumber });
+         }
+       });
 
-        room.typingUsers.delete(socket.username);  
+       room.typingUsers.delete(socket.username);
 
-  
-        const updatedUsers = Array.from(room.users).filter(user => user);
-        io.to(roomId).emit('users-update', updatedUsers);
-        io.to(roomId).emit('typing', Array.from(room.typingUsers).filter(user => user)); 
-      }
-    });
-  });
+       const updatedUsers = Array.from(room.users).filter(user => user);
+       io.to(roomId).emit('users-update', updatedUsers);
+       io.to(roomId).emit('typing', Array.from(room.typingUsers).filter(user => user));
+     }
+   });
+ });
 
-  socket.on('set-username', (username) => {
-    socket.username = username;
-  });
+ socket.on('set-username', (username) => {
+   socket.username = username;
+ });
 
-  socket.on('error', (error) => {
-    console.error('Socket error:', error);
-  });
+ socket.on('error', (error) => {
+   console.error('Socket error:', error);
+ });
 });
 
 const PORT = process.env.PORT || 3001;
 
 httpServer.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://${ipAddress}:${PORT}`);
+ console.log(`Server running on http://${ipAddress}:${PORT}`);
 });
 
 httpServer.on('error', (error) => {
-  console.error('Server error:', error);
+ console.error('Server error:', error);
 });
 
 process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
+ console.error('Uncaught Exception:', error);
 });
 
 process.on('unhandledRejection', (error) => {
-  console.error('Unhandled Rejection:', error);
+ console.error('Unhandled Rejection:', error);
 });
