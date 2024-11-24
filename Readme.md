@@ -38,11 +38,6 @@ collaborative-editor/ .1
 
 ### 1.Quick start!(Suggested!)[Method-1]
 
-##  Setup use for .1 files, you need all .1 files.
-
-- This context will build and run docker images based on current Dockerfile contexts in both client and server.
-
-
 - If you want to get started with the project without the hassle of setting up everything, this is for you!
 - Simply download the compose file in collaborative-editor/Quick-Start/docker-compose.yml
 - You don't need the rest of code, just the docker-compose.yml is enough.
@@ -66,6 +61,10 @@ cd collaborative-editor
 ```
 
 ###  Build and Start Services with Docker Compose
+
+-  Setup use for .1 files, you need all .1 files.
+
+- This context will build and run docker images based on current Dockerfile contexts in both client and server.
 
 Run the following command to build and start both the client and server containers:
 
@@ -105,10 +104,10 @@ make help
 
 | Service  | URL                    | Description                    | On-Network                     |
 |----------|------------------------|--------------------------------|--------------------------------|
-| Frontend | http://localhost:3000  | Collaborative Editor Interface | http://<your-ipv4>:3000        |
-| Backend  | http://localhost:3001  | WebSocket Server               | http://<your-ipv4>:3001        |
+| Frontend | http://localhost:3000  | Collaborative Editor Interface | http://(your-ipv4):3000        |
+| Backend  | http://localhost:3001  | WebSocket Server               | http://(your-ipv4):3001        |
 
-> **Note**: Replace `<your-ipv4>` with your machine's IPv4 address to access the services from other devices on your network.
+> **Note**: Replace (your-ipv4) with your machine's IPv4 address to access the services from other devices on your network.
 > To find your IPv4 address:
 > - Windows: Open CMD and type `ipconfig`
 > - Linux/Mac: Open terminal and type `ifconfig` or `ip addr`
