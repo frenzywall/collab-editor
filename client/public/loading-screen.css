@@ -1,21 +1,25 @@
 .loading-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('../src/assets/joinroom.jpg') no-repeat center center, 
-                linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.5s ease;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(185, 199, 201, 0.236); 
+  background-image: url('./assets/joinroom.jpg'); 
+  background-size: cover; 
+  background-position: center; 
+  background-attachment: fixed; 
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
   .tick-mark {
     font-size: 1rem;
-    color: #00B894;
+    color: #7d7a80;
     margin-left: 10px;
     opacity: 0;
     transition: opacity 0.5s ease;
@@ -27,21 +31,21 @@
   
   
   .loading-content {
-    background: rgb(214, 215, 216);
+    background: rgba(214, 215, 216, 0.8); 
     padding: 3.8rem;
     border-radius: 25px;
     box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1);
     width: 95%;
     max-width: 4000px;
     text-align: center;
-  }
+}
   
   .logo-animation {
     margin-bottom: 1.2rem;
   }
   
   .collaborative-icon {
-    animation: rotate 3s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
+    animation: rotate 4.2s relative(0.215, 0.610, 0.355, 1) infinite;
   }
   
   .circle-path {
@@ -121,7 +125,7 @@
   }
   
   .step.active::before {
-    opacity: 1;
+    opacity: 2;
   }
   
   /* Animations */

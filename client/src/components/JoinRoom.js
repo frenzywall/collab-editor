@@ -23,14 +23,15 @@ const JoinRoom = ({ onJoin }) => {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-white/30 overflow-hidden z-10"
+        transition={{ duration: 0.6, delay: 4 }} 
+        className="w-full max-w-md rounded-2xl shadow-xl border border-white/30 overflow-hidden z-10"
+        style={{ background: 'rgba(255, 255, 255, 0.8)' }} // Set to a transparent grey
       >
         <div className="p-8">
           <motion.h2
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 4.4 }} 
             className="text-3xl font-bold text-center text-gray-800 mb-6 flex items-center justify-center gap-3"
           >
             <Users className="w-8 h-8 text-[#333333]" />
@@ -51,7 +52,7 @@ const JoinRoom = ({ onJoin }) => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
+              transition={{ delay: 4.3 }} 
             >
               <div className="relative">
                 <input
@@ -68,7 +69,7 @@ const JoinRoom = ({ onJoin }) => {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 4.5 }} 
             >
               <div className="relative">
                 <input
@@ -83,17 +84,17 @@ const JoinRoom = ({ onJoin }) => {
             </motion.div>
 
             <motion.button
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.25)",
-                transition: { duration: 0.3 },
-              }}
-              whileTap={{ scale: 0.95 }}
-              type="submit"
-              className="w-full bg-gradient-to-r from-gray-300 to-gray-400 text-white p-3 rounded-xl transition-all duration-300 transform hover:bg-gradient-to-l hover:bg-opacity-90 shadow-lg"
-            >
-              Enter Collaborative Space
-            </motion.button>
+  whileHover={{
+    scale: 1.05,
+    boxShadow: "0px 10px 30px rgba(0, 0, 0, 0.25)",
+    transition: { duration: 0.1 },
+  }}
+  whileTap={{ scale: 0.95 }}
+  type="submit"
+  className="w-full bg-gradient-to-r from-gray-400 to-gray-500 text-white p-3 rounded-xl transition-all duration-300 transform hover:bg-gradient-to-l hover:bg-opacity-90 shadow-lg"
+>
+  Enter Collaborative Space
+</motion.button>
           </form>
         </div>
       </motion.div>
