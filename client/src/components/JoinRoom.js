@@ -25,7 +25,7 @@ const JoinRoom = ({ onJoin }) => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 4 }} 
         className="w-full max-w-md rounded-2xl shadow-xl border border-white/30 overflow-hidden z-10"
-        style={{ background: 'rgba(255, 255, 255, 0.8)' }} // Set to a transparent grey
+        style={{ background: 'rgba(255, 255, 255, 0.8)' }} 
       >
         <div className="p-8">
           <motion.h2
