@@ -14,7 +14,8 @@ body {
   display: flex;
   flex-direction: column;
   resize: vertical;
-  height: 95vh;
+  height: 100vh; /* Full viewport height */
+  width: 100%; /* Full viewport width */
   padding: 18px;
   background: #282829e3;
   transform: translateY(-4px);
@@ -104,65 +105,67 @@ body {
 }
 
 .editor-wrapper {
- flex-grow: 1; 
- display:flex; 
- flex-direction:column; 
- position: relative; 
+  flex-grow: 1; 
+  display: flex; 
+  flex-direction: column; 
+  position: relative; 
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
 }
 
 .editor-textarea {
- width: 97.9%;
- height: calc(100% - 40px); 
- resize: vertical; 
- border-radius:20px; 
- padding:15px; 
- font-size:1rem; 
- line-height:2.0; 
- font-family:'Roboto Mono', monospace; 
- background-color:#ffffff; 
- box-shadow:inline -2px -2px rgba(255,255,255,0.5), inset -4px -4px rgba(255,255,255,0.3); 
- transition:border-color .3s ease-in-out, box-shadow .3s ease-in-out; 
+  width: 100%; /* Full width */
+  height: calc(100% - 40px); 
+  resize: vertical; 
+  border-radius: 20px; 
+  padding: 15px; 
+  font-size: 1rem; 
+  line-height: 2.0; 
+  font-family: 'Roboto Mono', monospace; 
+  background-color: #ffffff; 
+  box-shadow: inset -2px -2px rgba(255,255,255,0.5), inset -4px -4px rgba(255,255,255,0.3); 
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
 }
 
 .editor-textarea::placeholder {
- color:#a1a1aa; 
+  color: #a1a1aa; 
 }
 
 .editor-textarea:hover,
-.editor-textarea.focus {
- border-color:#161617; 
- box-shadow:inline -2px -2px rgba(37, 37, 38, 0.2), inset -4px -4px rgba(37,99,235,.1); 
+.editor-textarea:focus {
+  border-color: #161617; 
+  box-shadow: inset -2px -2px rgba(37, 37, 38, 0.2), inset -4px -4px rgba(37,99,235,0.1); 
 }
 
 .status-panel {
- background-color:#dbdadab0; 
- padding:20px; 
- border-radius:12px; 
- box-shadow:.5rem .5rem  .75rem rgba(0,0,0,.1); 
- margin-top:auto; 
+  background-color: #dbdadab0; 
+  padding: 20px; 
+  border-radius: 12px; 
+  box-shadow: 0.5rem 0.5rem 0.75rem rgba(0,0,0,0.1); 
+  margin-top: auto; 
 }
 
 .locked-lines,
 .typing-status,
 .active-users {
- font-size:.95rem; 
- margin-bottom:.5rem; 
+  font-size: 0.95rem; 
+  margin-bottom: 0.5rem; 
 }
 
 .locked-lines {
- color:#150808; 
+  color: #150808; 
 }
 
 .typing-status {
- color:#3b82f6; 
+  color: #3b82f6; 
 }
 
 .active-users {
- color:#111212; 
- font-weight:bold; 
+  color: #111212; 
+  font-weight: bold; 
 }
 
 @keyframes fadeIn {
- from { opacity: 0; }
- to { opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
