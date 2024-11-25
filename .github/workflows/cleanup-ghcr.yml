@@ -1,7 +1,7 @@
 name: Cleanup Old Docker Images
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
   schedule:
     - cron: "0 0 */3 * *" 
 
@@ -17,24 +17,39 @@ jobs:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: List and Delete Old Images
+      - name: Cleanup Old Docker Images
         env:
           REPOSITORY: ghcr.io/${{ github.repository }}/editor
         run: |
-          # Fetch tags for both client and server images
           for IMAGE_TYPE in client server; do
             echo "Checking for old tags in $REPOSITORY:$IMAGE_TYPE"
-            
-            # Fetch all tags
-            TAGS=$(curl -s -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
-              "https://ghcr.io/v2/${{ github.repository }}/editor:$IMAGE_TYPE/tags/list" | jq -r '.tags[]')
 
-            # Loop through tags and delete old ones (exclude 'latest')
+           
+            RESPONSE=$(curl -s -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
+              "https://ghcr.io/v2/${{ github.repository }}/editor:$IMAGE_TYPE/tags/list")
+
+           =
+            echo "API Response: $RESPONSE"
+
+            TAGS=$(echo "$RESPONSE" | jq -r '.tags[]' 2>/dev/null || echo "")
+            if [ -z "$TAGS" ]; then
+              echo "No tags found or invalid response for $IMAGE_TYPE."
+              continue
+            fi
+
+            
             for TAG in $TAGS; do
               if [[ "$TAG" != "latest" ]]; then
-                echo "Deleting $TAG from $REPOSITORY:$IMAGE_TYPE"
-                curl -X DELETE -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
-                  "https://ghcr.io/v2/${{ github.repository }}/editor:$IMAGE_TYPE/manifests/$(docker manifest inspect ghcr.io/${{ github.repository }}/editor:$IMAGE_TYPE@$TAG --format '{{ .Digest }}')"
+                DIGEST=$(curl -s -I -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
+                  "https://ghcr.io/v2/${{ github.repository }}/editor:$IMAGE_TYPE/manifests/$TAG" | grep -i "docker-content-digest" | cut -d ' ' -f 2)
+
+                if [ -n "$DIGEST" ]; then
+                  echo "Deleting $TAG with digest $DIGEST from $REPOSITORY:$IMAGE_TYPE"
+                  curl -X DELETE -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
+                    "https://ghcr.io/v2/${{ github.repository }}/editor:$IMAGE_TYPE/manifests/$DIGEST"
+                else
+                  echo "Failed to fetch digest for $TAG"
+                fi
               fi
             done
           done
