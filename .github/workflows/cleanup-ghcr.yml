@@ -1,13 +1,14 @@
-name: Clean Old Docker Images
+name: Cleanup Old Docker Images
 
 on:
+  workflow_dispatch:  
   schedule:
-    - cron: '0 0 * * *'  
-  workflow_dispatch:
+    - cron: '0 0 * * 0'
 
 jobs:
-  clean:
+  cleanup:
     runs-on: ubuntu-latest
+
     steps:
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -16,18 +17,21 @@ jobs:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Delete Docker images older than 3 days
+      - name: List and delete Docker images older than a week
         run: |
-          CURRENT_DATE=$(date +%s)
-          IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}} {{.CreatedAt}}" | grep "${{ github.repository }}")
+          # Fetch the list of image digests older than a week
+          images=$(curl -s -H "Authorization: token ${{ secrets.GHCR_TOKEN }}" \
+            "https://ghcr.io/v2/${{ github.repository }}/manifests" \
+            | jq -r '.manifests[] | select(.created < (now - 604800)) | .digest')
 
-          for IMAGE in $IMAGES; do
-            IMAGE_NAME=$(echo $IMAGE | awk '{print $1}')
-            IMAGE_DATE=$(echo $IMAGE | awk '{print $2, $3, $4}')
-            IMAGE_TIMESTAMP=$(date -d "$IMAGE_DATE" +%s)
-
-            if [ $((CURRENT_DATE - IMAGE_TIMESTAMP)) -gt 259200 ]; then
-              echo "Deleting image ${IMAGE_NAME}"
-              docker rmi "$IMAGE_NAME"
-            fi
-          done
+          # Check if there are any images older than a week
+          if [ ! -z "$images" ]; then
+            echo "Cleaning up old images: $images"
+            # Delete images from GHCR
+            for image in $images; do
+              curl -X DELETE -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
+                "https://ghcr.io/v2/${{ github.repository }}/manifests/$image"
+            done
+          else
+            echo "No old images found"
+          fi
