@@ -1,0 +1,40 @@
+name: Cleanup Old Docker Images
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 */3 * *" 
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Authenticate to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: List and Delete Old Images
+        env:
+          REPOSITORY: ghcr.io/${{ github.repository }}/editor
+        run: |
+          # Fetch tags for both client and server images
+          for IMAGE_TYPE in client server; do
+            echo "Checking for old tags in $REPOSITORY:$IMAGE_TYPE"
+            
+            # Fetch all tags
+            TAGS=$(curl -s -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
+              "https://ghcr.io/v2/${{ github.repository }}/editor:$IMAGE_TYPE/tags/list" | jq -r '.tags[]')
+
+            # Loop through tags and delete old ones (exclude 'latest')
+            for TAG in $TAGS; do
+              if [[ "$TAG" != "latest" ]]; then
+                echo "Deleting $TAG from $REPOSITORY:$IMAGE_TYPE"
+                curl -X DELETE -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
+                  "https://ghcr.io/v2/${{ github.repository }}/editor:$IMAGE_TYPE/manifests/$(docker manifest inspect ghcr.io/${{ github.repository }}/editor:$IMAGE_TYPE@$TAG --format '{{ .Digest }}')"
+              fi
+            done
+          done
