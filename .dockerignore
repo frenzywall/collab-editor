@@ -1,2 +1,15 @@
-*./node_modules
-*/package.lock.json
+Local-Dev(Test)/
+Local-Dev(Test)/**/*
+Quick-start/
+Quick-start/**/*
+get_ip.sh
+.gitignore
+Makefile
+Readme.md
+.github/
+.github/**/*
+**/node_modules/
+node_modules/
+**/package-lock.json
+package-lock.json
+
