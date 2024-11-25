@@ -4,12 +4,11 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "3000:80"  
     environment:
       - NODE_ENV=production
-      - REACT_APP_SERVER_URL=http://localhost:3001  
-    depends_on:
-      - server
+      - REACT_APP_SERVER_URL=http://localhost:3001
+    restart: unless-stopped
     networks:
       - app-network
 
@@ -18,10 +17,11 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "3001:3001"
+      - "3001:3001"  
     environment:
       - NODE_ENV=production
       - PORT=3001
+    restart: unless-stopped
     networks:
       - app-network
 
