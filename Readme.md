@@ -22,7 +22,7 @@ collaborative-editor/ .1
 
 ```
 
-## ✨ Features
+## ✨ Features.
 
 * 🔄 Real-time collaboration in an editor
 * ⚛️ React frontend with WebSocket communication to the backend
