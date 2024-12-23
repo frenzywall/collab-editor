@@ -2,12 +2,12 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile  
+      dockerfile: Dockerfile
     ports:
-      - "3000:80"  
+      - "3000:80"
     environment:
       - NODE_ENV=production
-      - REACT_APP_SERVER_URL=http://localhost:3001  
+      - REACT_APP_SERVER_URL=http://localhost:3001
     restart: unless-stopped
     networks:
       - app-network
@@ -15,9 +15,9 @@ services:
   server:
     build:
       context: ./server
-      dockerfile: Dockerfile  
+      dockerfile: Dockerfile
     ports:
-      - "3001:3001"  
+      - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
@@ -25,6 +25,47 @@ services:
     networks:
       - app-network
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules.yml:/etc/prometheus/rules.yml
+      - prometheus_data:/prometheus
+    environment:
+      - TZ=UTC
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=10d'
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3002
+    ports:
+      - "3002:3000"
+    networks:
+      - app-network
+    depends_on:
+      - prometheus
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
