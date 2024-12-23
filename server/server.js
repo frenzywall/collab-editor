@@ -349,7 +349,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// Express endpoints
+
 app.get('/metrics', async (req, res) => {
   res.set('Content-Type', register.contentType);
   try {
@@ -369,14 +369,12 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Server setup
 const PORT = process.env.PORT || 3001;
 
 httpServer.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://${ipAddress}:${PORT}`);
 });
 
-// Error handling
 httpServer.on('error', (error) => {
   console.error('Server error:', error);
   errorCounter.inc({ type: 'server_error' });

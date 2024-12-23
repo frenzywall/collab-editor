@@ -4,7 +4,6 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-# Create monitoring directory and copy config files
 RUN mkdir -p /app/monitoring
 COPY prometheus.yml rules.yml /app/monitoring/
 
