@@ -2,7 +2,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --production && npm prune --production
-COPY server.js ./
+COPY . .
 
 FROM node:20-alpine
 WORKDIR /app

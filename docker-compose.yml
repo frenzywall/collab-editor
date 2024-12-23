@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   client:
     build:
@@ -9,9 +10,11 @@ services:
       - NODE_ENV=production
       - REACT_APP_SERVER_URL=http://localhost:3001
     restart: unless-stopped
+    volumes:
+      - shared:/etc/prometheus
+    command: sh -c "cp /app/monitoring/* /etc/prometheus/ && nginx -g 'daemon off;'"
     networks:
       - app-network
-
   server:
     build:
       context: ./server
@@ -29,8 +32,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./rules.yml:/etc/prometheus/rules.yml
+      - shared:/etc/prometheus
       - prometheus_data:/prometheus
     environment:
       - TZ=UTC
@@ -40,6 +42,8 @@ services:
       - '--storage.tsdb.retention.time=10d'
     ports:
       - "9090:9090"
+    depends_on:
+      - client
     networks:
       - app-network
 
@@ -68,4 +72,6 @@ volumes:
   prometheus_data:
     driver: local
   grafana_data:
+    driver: local
+  shared:
     driver: local

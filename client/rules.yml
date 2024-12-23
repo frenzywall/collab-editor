@@ -1,0 +1,19 @@
+groups:
+  - name: server_alerts
+    rules:
+      - alert: ServerState
+        expr: up{job="server"} == 0
+        for: 15s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Server Down"
+          description: "Server has been unreachable for more than 15 seconds"
+
+      - alert: ServerStateChange
+        expr: changes(up{job="server"}[1m]) > 0
+        labels:
+          severity: info
+        annotations:
+          summary: "Server State Changed"
+          description: "Server state has changed"

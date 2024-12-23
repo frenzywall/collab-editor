@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   client:
     image: ghcr.io/frenzywall/collab-editor/editor:client
@@ -14,7 +16,6 @@ services:
     restart: unless-stopped
     networks:
       - app-network
-    
 
   server:
     image: ghcr.io/frenzywall/collab-editor/editor:server
@@ -29,17 +30,61 @@ services:
     networks:
       - app-network
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules.yml:/etc/prometheus/rules.yml
+      - prometheus_data:/prometheus
+    environment:
+      - TZ=Asia/Kolkata
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=10d'
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3002
+      - TZ=Asia/Kolkata
+    ports:
+      - "3002:3000"
+    networks:
+      - app-network
+    depends_on:
+      - prometheus
+
   watchtower:
     image: containrrr/watchtower
     container_name: watchtower
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock  
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - WATCHTOWER_CLEANUP=true                
+      - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_POLL_INTERVAL=30
-      - WATCHTOWER_DEBUG=true  
-      - TZ=Asia/Kolkata      
+      - WATCHTOWER_DEBUG=true
+      - TZ=Asia/Kolkata
+    networks:
+      - app-network
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local

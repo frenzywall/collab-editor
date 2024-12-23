@@ -1,5 +1,3 @@
-Local-Dev(Test)/
-Local-Dev(Test)/**/*
 Quick-start/
 Quick-start/**/*
 get_ip.sh
@@ -15,7 +13,8 @@ package-lock.json
 node_modules
 npm-debug.log
 Dockerfile*
+docker-compose.yml
 .git
 .gitignore
-README.md
+Readme.md
 
