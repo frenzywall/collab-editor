@@ -16,6 +16,9 @@ services:
     restart: unless-stopped
     networks:
       - app-network
+    volumes:
+      - shared:/etc/prometheus  
+    command: sh -c "cp /app/monitoring/* /etc/prometheus/ && nginx -g 'daemon off;'"
 
   server:
     image: ghcr.io/frenzywall/collab-editor/editor:server
@@ -29,13 +32,13 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     networks:
       - app-network
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./rules.yml:/etc/prometheus/rules.yml
+      - shared:/etc/prometheus  
       - prometheus_data:/prometheus
     environment:
       - TZ=Asia/Kolkata
@@ -87,4 +90,6 @@ volumes:
   prometheus_data:
     driver: local
   grafana_data:
+    driver: local
+  shared:
     driver: local
