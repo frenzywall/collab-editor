@@ -1,23 +1,27 @@
 global:
-  scrape_interval: 10s  
-  evaluation_interval: 10s  
+  scrape_interval: 10s  # Scrape targets every 10 seconds
+  evaluation_interval: 10s  # Evaluate rules every 10 seconds
 
 scrape_configs:
+  # Monitor Prometheus itself
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['prometheus:9090']  
+      - targets: ['prometheus:9090']  # The Prometheus container
 
+  # Monitor Docker containers
   - job_name: 'docker'
     static_configs:
-      - targets: ['localhost:9323']  
+      - targets: ['docker.for.mac.host.internal:9323']  # Docker metrics endpoint (if enabled)
 
+  # Monitor the application server
   - job_name: 'server'
     static_configs:
-      - targets: ['quick-start-server-1:3001']  
+      - targets: ['quick-start-server-1:3001']  # Replace with server container hostname
 
+  # Monitor the application client
   - job_name: 'client'
     static_configs:
-      - targets: ['quick-start-client-1:80']  
+      - targets: ['quick-start-client-1:80']  # Replace with client container hostname
 
 rule_files:
-  - '/etc/prometheus/rules.yml'
+  - '/etc/prometheus/rules.yml'  # Include the alerting rules file

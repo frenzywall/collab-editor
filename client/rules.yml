@@ -1,6 +1,7 @@
 groups:
   - name: server_alerts
     rules:
+      # Alert if the server is down
       - alert: ServerState
         expr: up{job="server"} == 0
         for: 15s
@@ -10,6 +11,7 @@ groups:
           summary: "Server Down"
           description: "Server has been unreachable for more than 15 seconds"
 
+      # Alert if the server state changes
       - alert: ServerStateChange
         expr: changes(up{job="server"}[1m]) > 0
         labels:
