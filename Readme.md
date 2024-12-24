@@ -42,10 +42,9 @@ collab-editor/
 
 ### 1.Quick start!(Suggested!)[Method-1]
 
-<div style="display: flex; justify-content: space-between;">
-  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/2.gif" alt="GIF 2" style="width: 48%; height: auto;"/>
-  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/3.gif" alt="GIF 3" style="width: 48%; height: auto;"/>
-</div>
+| ![GIF 2](https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/2.gif) | ![GIF 3](https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/3.gif) |
+|---|---|
+
 
 
 - If you want to get started with the project without the hassle of setting up everything, this is for you!
