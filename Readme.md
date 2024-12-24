@@ -5,20 +5,22 @@ A collaborative real-time *chat* room built with **React**, **Node.js**, and **W
 - A **client** that provides the user interface.
 - A **server** that handles the backend and communication.
 
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/Production/client/src/assets/1.gif" alt="GIF 1" style="width: 100%; height: auto;"/>
+</div>
+
+
 ## 📁 Project Structure
 ```
-collaborative-editor/ .1
-├── client/  .1            
-├── server/  .1            
-├── docker-compose.yml  .1
-└── Makefile  .1         
-├── Local-Dev(Test)/     .2
-│   └── collaborative-editor-<Use for local development,(Docker not required)>-  .2
-│       ├── client/      .2
-│       ├── server/      .2
-│       └── Makefile     .2
-├── Quick-start/-<Get started quickly without any setup!(Docker-required)>-   .3      
-  └── docker-compose.yml .3
+collab-editor/
+├── client/                 # React frontend
+├── server/                 # Node.js backend
+├── config/                 # Monitoring configuration
+│   ├── datasource.yml      # Grafana datasource
+│   ├── prometheus.yml      # Prometheus config
+│   └── rules.yml           # Alert rules
+├── Quick-start/            # Ready-to-run deployment( Preferred Method, download just this folder)
+└── docker-compose.yml      # Container orchestration
 
 ```
 
@@ -28,6 +30,8 @@ collaborative-editor/ .1
 * ⚛️ React frontend with WebSocket communication to the backend
 * 🐳 Dockerized environment for easy local development and production deployment
 * ⚙️ Configurable settings for local and production setups
+* 📊 Metrics collection and visualization with **Prometheus** and **Grafana**
+* 🌐 Nginx-powered static content delivery with built in cache.
 
 ##  Requirements
 
@@ -38,9 +42,15 @@ collaborative-editor/ .1
 
 ### 1.Quick start!(Suggested!)[Method-1]
 
+| ![GIF 3](https://raw.githubusercontent.com/frenzywall/collab-editor/Production/client/src/assets/3.gif) | ![GIF 2](https://raw.githubusercontent.com/frenzywall/collab-editor/Production/client/src/assets/2.gif) |
+|---|---|
+
+
+
 - If you want to get started with the project without the hassle of setting up everything, this is for you!
-- Simply download the compose file in collaborative-editor/Quick-Start/docker-compose.yml
-- You don't need the rest of code, just the docker-compose.yml is enough.
+- Simply download the folder(If you are in main branch, main is default) in collaborative-editor/Quick-Start/
+  ## (!This is Production branch, the docker-compose.yml is enough to run!)
+- You don't need the rest of code! How cool!!
 
 ```bash
 cd Quick-start
@@ -74,26 +84,7 @@ docker-compose up -d
 
 > **Note**: This will build Docker images for both services and start them in detached mode (-d)
 
-## 3.Local Development Setup (Optional), Setup use for .2 files, you need all .2 files.[Method-3]
 
-- This is intended for pure local developments, this setup would allow you to access localhost and devices connected across your network.
-
-For a quick setup with default settings:
-
-```bash
-
-cd Local-Dev(Test)
-make install
-make run
-
-```
-- For help, do:
-```bash
-make help
-
-```
-
-> **Note**: Client runs on http://localhost:3000, Server on http://localhost:3001
 
 ## 🌐 Accessing the Application
 ## 🌐 Service Access
@@ -117,19 +108,52 @@ If your IP address is 192.168.1.100:
 - Frontend: `http://192.168.1.100:3000`
 - Backend: `http://192.168.1.100:3001`
 
+## 💡 Metrics with Prometheus and Grafana
 
-##  Docker Images
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/Production/client/src/assets/4.gif" alt="GIF 1" style="width: 100%; height: auto;"/>
+</div>
 
-Docker images are hosted on GitHub Container Registry (GHCR).
+### Setup Metrics
+
+This project includes **Prometheus** for metrics collection and **Grafana** for visualization.
+
+### Running Prometheus and Grafana
+
+Prometheus and Grafana are included in the `docker-compose.yml` file. Start them using:
 
 ```bash
-# Login to GitHub Container Registry
-docker login ghcr.io
-
-# Pull Images
-docker pull ghcr.io/frenzywall/collab-editor/editor:client
-docker pull ghcr.io/frenzywall/collab-editor/editor:server
+docker-compose up -d prometheus grafana
 ```
+
+### Accessing the Metrics Dashboards
+
+| Service    | URL                                            | Default Credentials |
+| ---------- | ---------------------------------------------- | ------------------- |
+| Prometheus | [http://localhost:9090](http://localhost:9090) | N/A                 |
+| Grafana    | [http://localhost:3002](http://localhost:3002) | admin/admin         |
+
+#### Prometheus Configuration
+
+Prometheus configuration is located in `prometheus/prometheus.yml` and includes scrape jobs to monitor the application.
+
+1. You can add services to the prometheus.yml with an metrics end point exposed. Currently, only server(container-name), prometheus and docker itself are configured to expose their metric end points.
+
+2. Access [http://localhost:9090], check status dashboard to see what serives are being discovered, it should list the three services and should report healthy.
+
+3. Alerts are also configured to alert if the server state change(down/up/stopped/unhealthy) to the users(Needs manual config of alertmanager and grafana setup,(to be provisioned in later updated!))
+
+- TRY OUT!
+In you docker console, check manually stopping the server container, you should see the alert getting triggered!
+
+### Steps to Access Grafana
+
+1. Open `http://localhost:3002` in your browser.
+2. Login with the default credentials (`admin`/`admin`). (Will be autofilled.)
+3. Add a new dashboard or explore the pre-configured dashboard in the `grafana/provisioning/` directory.
+4. Automatically configured to use prometheus url, no manual config is required except logging in with the    default credentials provided(You can change them in "docker-compose.yml" file)
+5. Visualize metrics like active users, message counts, and system health.
+
 
 ##  Development
 
@@ -164,4 +188,3 @@ docker pull ghcr.io/frenzywall/collab-editor/editor:server
 - [Makefile](https://www.gnu.org/software/make/#download) -GNU Project
 
 ---
-
