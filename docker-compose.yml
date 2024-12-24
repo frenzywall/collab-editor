@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   client:
     build:
@@ -11,10 +12,11 @@ services:
       - REACT_APP_SERVER_URL=http://localhost:3001
     restart: unless-stopped
     volumes:
-      - shared:/etc/prometheus
+      - shared:/etc/prometheus  
     command: sh -c "cp /app/monitoring/* /etc/prometheus/ && nginx -g 'daemon off;'"
     networks:
       - app-network
+
   server:
     build:
       context: ./server
@@ -32,8 +34,8 @@ services:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - shared:/etc/prometheus
-      - prometheus_data:/prometheus
+      - shared:/etc/prometheus  
+      - prometheus_data:/prometheus  
     environment:
       - TZ=UTC
     command:
@@ -51,7 +53,9 @@ services:
     image: grafana/grafana
     container_name: grafana
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana_data:/var/lib/grafana  
+      - shared:/etc/prometheus  
+      - shared:/etc/grafana/provisioning/datasources/  
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   client:
     image: ghcr.io/frenzywall/collab-editor/editor:client
@@ -39,7 +37,7 @@ services:
     container_name: prometheus
     volumes:
       - shared:/etc/prometheus  
-      - prometheus_data:/prometheus
+      - prometheus_data:/prometheus  
     environment:
       - TZ=Asia/Kolkata
     command:
@@ -55,7 +53,9 @@ services:
     image: grafana/grafana
     container_name: grafana
     volumes:
-      - grafana_data:/var/lib/grafana
+      - grafana_data:/var/lib/grafana  
+      - shared:/etc/prometheus         
+      - shared:/etc/grafana/provisioning/datasources  
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin

@@ -5,7 +5,7 @@ RUN npm install
 COPY . .
 
 RUN mkdir -p /app/monitoring
-COPY prometheus.yml rules.yml /app/monitoring/
+COPY prometheus.yml rules.yml datasource.yml /app/monitoring/
 
 ENV NODE_ENV=production
 RUN npm run build
