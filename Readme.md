@@ -42,7 +42,7 @@ collab-editor/
 
 ### 1.Quick start!(Suggested!)[Method-1]
 
-| ![GIF 2](https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/2.gif) | ![GIF 3](https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/3.gif) |
+| ![GIF 3](https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/3.gif) | ![GIF 2](https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/2.gif) |
 |---|---|
 
 
@@ -108,6 +108,10 @@ If your IP address is 192.168.1.100:
 - Backend: `http://192.168.1.100:3001`
 
 ## 💡 Metrics with Prometheus and Grafana
+
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/4.gif" alt="GIF 1" style="width: 100%; height: auto;"/>
+</div>
 
 ### Setup Metrics
 
