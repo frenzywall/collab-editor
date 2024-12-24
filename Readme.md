@@ -6,9 +6,7 @@ A collaborative real-time *chat* room built with **React**, **Node.js**, and **W
 - A **server** that handles the backend and communication.
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/1.gif" alt="GIF 1" style="width: 30%; height: auto;"/>
-  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/2.gif" alt="GIF 2" style="width: 30%; height: auto;"/>
-  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/3.gif" alt="GIF 3" style="width: 30%; height: auto;"/>
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/1.gif" alt="GIF 1" style="width: 100%; height: auto;"/>
 </div>
 
 
@@ -43,6 +41,12 @@ collab-editor/
 
 
 ### 1.Quick start!(Suggested!)[Method-1]
+
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/2.gif" alt="GIF 2" style="width: 48%; height: auto;"/>
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/3.gif" alt="GIF 3" style="width: 48%; height: auto;"/>
+</div>
+
 
 - If you want to get started with the project without the hassle of setting up everything, this is for you!
 - Simply download the folder(If you are in main branch, main is default) in collaborative-editor/Quick-Start/
