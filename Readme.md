@@ -5,6 +5,13 @@ A collaborative real-time *chat* room built with **React**, **Node.js**, and **W
 - A **client** that provides the user interface.
 - A **server** that handles the backend and communication.
 
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/1.gif" alt="GIF 1" style="width: 30%; height: auto;"/>
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/2.gif" alt="GIF 2" style="width: 30%; height: auto;"/>
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/3.gif" alt="GIF 3" style="width: 30%; height: auto;"/>
+</div>
+
+
 ## 📁 Project Structure
 ```
 collab-editor/
