@@ -13,7 +13,7 @@ A collaborative real-time *chat* room built with **React**, **Node.js**, and **W
 ## 📁 Project Structure
 ```
 collab-editor/
-├── client/                 # React frontend
+├── client/                 # React frontend.
 ├── server/                 # Node.js backend
 ├── config/                 # Monitoring configuration
 │   ├── datasource.yml      # Grafana datasource
