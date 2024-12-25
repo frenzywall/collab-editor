@@ -41,7 +41,7 @@ services:
       - redis_data:/data
     environment:
       - TZ=Asia/Kolkata
-    command: redis-server --bind redis  --maxmemory 150mb --maxmemory-policy allkeys-lru --appendonly yes
+    command: redis-server --bind redis  --maxmemory 150mb --maxmemory-policy allkeys-lru --appendonly no
     networks:
       - app-network  
     restart: unless-stopped
