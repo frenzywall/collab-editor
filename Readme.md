@@ -37,7 +37,7 @@ collab-editor/
 
 ##  Requirements
 
-* [Docker](https://www.docker.com/) and Docker Compose
+* [Docker](https://docs.docker.com/desktop/) and Docker Compose
 * [Node.js](https://nodejs.org/) (for development, if you want to build locally)
 * [GitHub Container Registry](https://ghcr.io/) (for pulling Docker images)
 
@@ -205,7 +205,7 @@ Head to your docker-desktop console, look for redisinsight container and follow 
 | Service      | URL                                              | Connection Details                |
 |--------------|--------------------------------------------------|----------------------------------|
 | RedisInsight | [http://localhost:5540](http://localhost:5540)   | `redis://default@redis:6379`     |
-| Client       | [http://localhost:3001](http://localhost:3001)   | `{0-100}/{Your desired username}`|
+| Client       | [http://localhost:3000](http://localhost:3000)   | `{0-100}/{Your desired username}`|
 
 
 
@@ -222,7 +222,7 @@ Expected: "connected: true" and successful test value operations
 2. **Room Cache**
 - Join room and make changes
 - Check cache: `curl http://localhost:3001/test-room-cache/YOUR_ROOM_ID`
-Expected: Matching data in Redis/memory, persistence after restart
+  Expected: Matching data in Redis/memory, persistence after restart
 
 3. **Debounce**
 - Make rapid document changes
@@ -237,7 +237,10 @@ curl http://localhost:3001/test-redis-persistence
 Expected: Data survives server restarts
 
 5. **Redis-exporter metrics expose**
-- check with ```bash http://localhost:9121/ ```
+- check with 
+```bash 
+curl http://localhost:9121/ 
+```
 
 6. **Server health check and metrics check**
 - check with
