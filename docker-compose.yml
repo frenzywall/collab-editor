@@ -35,7 +35,10 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - app-network  
+      - app-network    
+    command: redis-server --bind redis  --maxmemory 10mb --maxmemory-policy allkeys-lru --appendonly yes
+    volumes:
+      - redis_data:/data
     restart: unless-stopped
 
   prometheus:
@@ -106,4 +109,6 @@ volumes:
   prometheus_data:
     driver: local
   grafana_data:
+    driver: local
+  redis_data:
     driver: local
