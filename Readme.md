@@ -115,7 +115,7 @@ If your IP address is 192.168.1.100:
 - Frontend: `http://192.168.1.100:3000`
 - Backend: `http://192.168.1.100:3001`
 
-## 💡 Metrics with Prometheus and Grafana
+## 💡 Metrics with Prometheus,Grafana and Docker.
 
 <div style="display: flex; justify-content: space-between;">
   <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/4.gif" alt="GIF 1" style="width: 100%; height: auto;"/>
@@ -123,7 +123,19 @@ If your IP address is 192.168.1.100:
 
 ### Setup Metrics
 
-This project includes **Prometheus** for metrics collection and **Grafana** for visualization.
+This project includes **Prometheus** for metrics collection and **Grafana** , **Docker** for visualization.
+
+### Docker Metric expose.
+
+In your docker-desktop/docker configuration file, make sure it looks like something like this:
+
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/docker-metric-expose.png" alt="GIF 1" style="width: 100%; height: auto;"/>
+</div>
+This line should be present for docker to expose its metrics endpoint:
+
+**"metrics-addr": "127.0.0.1:9323"**.
+
 
 ### Running Prometheus and Grafana
 
