@@ -129,9 +129,9 @@ This project includes **Prometheus** for metrics collection and **Grafana** , **
 
 In your docker-desktop/docker configuration file, make sure it looks like something like this:
 
-<div style="display: flex; justify-content: space-between;">
-  <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/docker-metric-expose.png" alt="GIF 1" style="width: 100%; height: auto;"/>
-</div>
+### Docker Metrics Exposure Configuration
+
+![Docker Metrics Configuration](https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/docker-metric-expose.png)
 This line should be present for docker to expose its metrics endpoint:
 
 **"metrics-addr": "127.0.0.1:9323"**.
