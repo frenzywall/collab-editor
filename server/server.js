@@ -119,6 +119,27 @@ app.get('/test-redis', async (req, res) => {
     });
   }
 });
+
+app.get('/test-redis-persistence', async (req, res) => {
+  try {
+    // Get all room keys
+    const keys = await redis.keys('room:*');
+    const data = {};
+    
+    for (const key of keys) {
+      data[key] = await redis.get(key);
+    }
+    
+    res.json({
+      keys: keys,
+      data: data
+    });
+  } catch (err) {
+    res.json({
+      error: err.message
+    });
+  }
+});
 app.get('/test-room-cache/:roomId', async (req, res) => {
   try {
     const roomId = req.params.roomId;

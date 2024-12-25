@@ -32,6 +32,8 @@ collab-editor/
 * ⚙️ Configurable settings for local and production setups
 * 📊 Metrics collection and visualization with **Prometheus** and **Grafana**
 * 🌐 Nginx-powered static content delivery with built in cache.
+* 🛠️ Redis integration for caching and real-time data management.
+* 📈 RedisInsight for monitoring Redis data in real-time.
 
 ##  Requirements
 
@@ -50,6 +52,12 @@ collab-editor/
 - If you want to get started with the project without the hassle of setting up everything, this is for you!
 - Simply download the folder(If you are in main branch, main is default) in collaborative-editor/Quick-Start/
 - You don't need the rest of code! How cool!!
+
+!! Before running make sure you are logged into your hub.docker.com account !! If not, do: 
+
+```bash
+docker login
+```
 
 ```bash
 cd Quick-start
@@ -132,6 +140,7 @@ docker-compose up -d prometheus grafana
 | Prometheus | [http://localhost:9090](http://localhost:9090) | N/A                 |
 | Grafana    | [http://localhost:3002](http://localhost:3002) | admin/admin         |
 
+
 #### Prometheus Configuration
 
 Prometheus configuration is located in `prometheus/prometheus.yml` and includes scrape jobs to monitor the application.
@@ -147,13 +156,90 @@ In you docker console, check manually stopping the server container, you should 
 
 ### Steps to Access Grafana
 
-1. Open `http://localhost:3002` in your browser.
+1. Open `http://localhost:3002` or go to your docker-desktop console, look for grafana containerand open the bind port link in your browser.
 2. Login with the default credentials (`admin`/`admin`). (Will be autofilled.)
 3. Add a new dashboard or explore the pre-configured dashboard in the `grafana/provisioning/` directory.
 4. Automatically configured to use prometheus url, no manual config is required except logging in with the    default credentials provided(You can change them in "docker-compose.yml" file)
 5. Visualize metrics like active users, message counts, and system health.
 
+## Data Persistence with Redis and insigh visualisation with redisinsights
 
+<div align="center">
+  <img src="https://redis.io/wp-content/uploads/2024/04/Redis_Desktop_01_Home_M2_Illustration01.svg?&auto=webp&quality=85,75&width=500" alt="Redis and RedisInsight Architecture" />
+  <p><em>Redis and RedisInsight Architecture Overview</em></p>
+</div>
+
+This project implements Redis as a real-time data storage and caching solution. Redis is utilized for managing:
+
+1. Current users in sessions(rooms)
+2. Content of each room
+3. Message history. When logged in with the same RoomID after exiting the collab-editor, users can continue where they have left off!
+4. Session management. Can remove users,add and manage from redisinsight console.
+5. Caching frequently accessed data. Used debouncing method to reduce the process overheading, greatly improved memory and cpu efficiency from previous versions.
+
+- How to access the redisinsight console?
+
+Head to your docker-desktop console, look for redisinsight container and follow the bind ports.
+
+### Steps to Access RedisInsight
+
+1. Click on "Add Redis Database"
+2. Use the following connection URL to connect to the Redis database:
+   ```bash
+   redis://default@redis:6379
+   ```
+   Note: "redis" after @ is the name of our container
+
+| Service      | URL                                              | Connection Details                |
+|--------------|--------------------------------------------------|----------------------------------|
+| RedisInsight | [http://localhost:5540](http://localhost:5540)   | `redis://default@redis:6379`     |
+| Client       | [http://localhost:3001](http://localhost:3001)   | `{0-100}/{Your desired username}`|
+
+
+
+## Debugging.
+
+### Component Testing
+
+1. **Redis Connection**
+```bash
+curl http://localhost:3001/test-redis
+```
+Expected: "connected: true" and successful test value operations
+
+2. **Room Cache**
+- Join room and make changes
+- Check cache: `curl http://localhost:3001/test-room-cache/YOUR_ROOM_ID`
+Expected: Matching data in Redis/memory, persistence after restart
+
+3. **Debounce**
+- Make rapid document changes
+- Check console for ~100ms grouped changes
+Expected: Smooth client updates
+
+4. **Redis Persistence**
+- Check stored data: `/test-redis-persistence`
+```bash
+curl http://localhost:3001/test-redis-persistence
+```
+Expected: Data survives server restarts
+
+5. **Redis-exporter metrics expose**
+- check with ```bash http://localhost:9121/ ```
+
+6. **Server health check and metrics check**
+- check with
+```bash
+curl http://localhost:3001/metrics
+```
+```bash
+curl http://localhost:3001/health
+```
+7. **Prometheus target check**
+
+```bash
+curl http://localhost:9090/targets
+```
 ##  Development
 
 ### Making Changes
