@@ -21,9 +21,22 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     restart: unless-stopped
     networks:
       - app-network
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network  
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus
@@ -61,6 +74,29 @@ services:
     depends_on:
       - prometheus
 
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "5540:5540"  
+    networks:
+      - app-network
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379 
+    depends_on:
+      - redis
+  redis_exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis_exporter
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis:6379  
+    networks:
+      - app-network
+    depends_on:
+      - redis
 
 networks:
   app-network:
