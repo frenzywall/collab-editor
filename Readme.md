@@ -2,9 +2,6 @@
 
 A collaborative real-time *chat* room built with **React**, **Node.js**, and **WebSocket**. This project consists of two main services:
 
-- A **client** that provides the user interface.
-- A **server** that handles the backend and communication.
-
 <div style="display: flex; justify-content: space-between;">
   <img src="https://raw.githubusercontent.com/frenzywall/collab-editor/main/client/src/assets/1.gif" alt="GIF 1" style="width: 100%; height: auto;"/>
 </div>
@@ -59,10 +56,13 @@ collab-editor/
 docker login
 ```
 
-```bash
-cd Quick-start
-```
-- Run this where you have downloaded the .yml if you have not downloaded the entire repo.
+1. ```bash
+   git clone https://github.com/frenzywall/collab-editor.git
+   ```
+2. ```bash
+   cd Quick-start
+   ```
+- Run this where you have downloaded the Quick-start folder if you have not downloaded the entire repo.
 
 ```bash
 docker-compose up -d
